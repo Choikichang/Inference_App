@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 class App(QWidget):
     def __init__(self):
         super().__init__()
-        self.title = 'Docker Control GUI'
+        self.title = '콘크리트 슬럼프 예측 시스템 ver.1'
         self.initUI()
 
     def initUI(self):
@@ -18,7 +18,7 @@ class App(QWidget):
         # Create a QLabel to display the logo image with a fixed size
         logo_label = QLabel(self)
         logo_label.setFixedSize(600, 100)  # Set the desired size (600x300)
-        pixmap = QPixmap('/home/choi/Git/Inference_App/Seoseoul_slump_time_table.jpg')  # Provide the path to your logo image
+        pixmap = QPixmap('C:\\Users\\User\\Documents\\GitHub\\Inference_App\\Seoseoul_slump_time_table.jpg')  # Provide the path to your logo image
         pixmap = pixmap.scaled(600, 100, Qt.KeepAspectRatio)  # Scale the pixmap to fit the label
         logo_label.setPixmap(pixmap)
         layout.addWidget(logo_label)
@@ -32,6 +32,8 @@ class App(QWidget):
         self.img_path_edit = QLineEdit(self)
         self.output_edit = QTextEdit(self)
         self.output_edit.setReadOnly(True)
+
+        layout.addWidget(QLabel('D드라이브 video 폴더 안의 파일을 선택해주세요'))
 
         layout.addWidget(QLabel('Config Path:'))
         layout.addWidget(self.config_path_edit)
@@ -76,13 +78,13 @@ class App(QWidget):
         ssh.connect('localhost', port=2222, username='root', password='0801')  # Replace with actual credentials
 
         # Command to run the script inside the container
-        command = f'/opt/conda/bin/python /data/mmaction2_for_deploy/inference_connect.py'
+        command = f'/opt/conda/bin/python /data/Eugene-deploy-mm2/inference_connect.py'
         if config_path:
-            command += f' --config {config_path}'
+            command += f' --config "{config_path}"'
         if checkpoint_path:
-            command += f' --checkpoint {checkpoint_path}'
+            command += f' --checkpoint "{checkpoint_path}"'
         if img_path:
-            command += f' --img_path {img_path}'
+            command += f' --video "{img_path}"'
         stdin, stdout, stderr = ssh.exec_command(command)
 
         # Fetch the output and error
