@@ -20,3 +20,11 @@ You can changes the paths by clicking the Browse button and selecting your file.
 
 After selecting your files, press the 'Run Model in Docker' button,and the slump prediction will be displayed in the Output Box.
 
+Before run in the docker, need to start ssh protocol to connect.
+
+in the container's terminal.
+passwd root /// make password
+service ssh start /// start ssh connection
+
+after restart container, ssh is not automatically started.
+So you need to restart ssh service manually.

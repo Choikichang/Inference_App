@@ -1,6 +1,7 @@
 import sys
 import paramiko
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QFileDialog, QTextEdit
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QLineEdit, QFileDialog, QTextEdit, QMenuBar
 from PyQt5.QtGui import QPixmap  # Import QPixmap to display the logo
 from PyQt5.QtCore import Qt
 
@@ -21,13 +22,28 @@ class App(QWidget):
 
 #########################  Logo path ###############################
 
-        pixmap = QPixmap('/home/choi/Git/Inference_App/Seoseoul_slump_time_table.jpg')  # Provide the path to your logo image
+        pixmap = QPixmap('/home/choi/Git/Inference_App/LOGO/Seoseoul_slump_time_table.jpg')  # Provide the path to your logo image
 
 ########################################################
 
         pixmap = pixmap.scaled(600, 100, Qt.KeepAspectRatio)  # Scale the pixmap to fit the label
         logo_label.setPixmap(pixmap)
         layout.addWidget(logo_label)
+
+        self.menu_bar = QMenuBar(self)
+        file_menu = self.menu_bar.addMenu('File')
+        edit_menu = self.menu_bar.addMenu('Edit')
+        help_menu = self.menu_bar.addMenu('Help')
+
+        # 메뉴 항목에 액션 추가 예제 (더 많은 액션 추가 가능)
+        file_menu.addAction('Open')
+        file_menu.addAction('Exit')
+        help_menu.addAction('About')
+
+        # 메뉴 바를 레이아웃에 추가
+        layout.setMenuBar(self.menu_bar)
+
+
 
         # Rest of your UI elements (config_path, checkpoint_path, etc.)
 
@@ -84,7 +100,7 @@ class App(QWidget):
         ssh.connect('localhost', port=2222, username='root', password='0801')  # Replace with actual credentials
 
         # Command to run the script inside the container
-        command = f'/opt/conda/bin/python /data/mmaction2_for_deploy/inference_connect.py'
+        command = f'/opt/conda/bin/python /data/Eugene-deploy/deep_label_inference.py'
         if config_path:
             command += f' --config "{config_path}"'
         if checkpoint_path:
@@ -99,7 +115,7 @@ class App(QWidget):
 
         if error:
             self.output_edit.setText("Error: " + error)
-        else:
+        elif output:
             # Extracting the relevant part of the output
             predicted_class = None
             for line in output.split('\n'):
@@ -110,6 +126,8 @@ class App(QWidget):
                 self.output_edit.setText(predicted_class)
             else:
                 self.output_edit.setText("Output received, but no prediction found.")
+        else:
+            pass
 
         ssh.close()
 
